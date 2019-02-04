@@ -1,0 +1,42 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+html, body, #map {
+    position:absolute;
+    height: 100%;
+    width: 100%;
+}
+
+#menu_icon {
+    position:absolute;
+    left:   10px;
+    bottom: 10px;
+    background-color: white;
+    border: black solid 3px;
+    border-radius:  10px;
+    width:  33px;
+    height: 33px;
+    z-index:1001;
+}
+
+#menu {
+    position:absolute;
+    left:   0px;
+    top:    0px;
+    background-color: white;
+    width:  150px;
+    height: 100%;
+    z-index:1000;
+    display:    none;
+}
+
+#m2 {
+    color:  #cccccc;
+}
+
+.melem {
+    background-color: white;
+    padding: 10px;
+}
