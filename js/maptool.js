@@ -19,12 +19,26 @@ MAPTOOL.module = (function() {
         rideLays = [],
         customLays = [],
         pcLay = null,
+        // documents
         doc,
         miDoc,
         mDoc,
-        m1Doc;
+        m1Doc,
+        // functions
+        init,
+        addOverLay,
+        geojson_style,
+        popup_properties,
+        getGeoLayer,
+        getPcLayer,
+        delPcLayer,
+        changeDisp,
+        changeMenu,
+        changePcPoint,
+        setDocuments,
+        setEvent;
 
-    function init() {
+    init = function() {
         myMap = L.map('map');
         paleMap = L.tileLayer(tileUrl +
             '/xyz/pale/{z}/{x}/{y}.png', {
@@ -60,13 +74,12 @@ MAPTOOL.module = (function() {
                 {collapsed: false}
             ).addTo(myMap);
         paleMap.addTo(myMap);
-        myMap.setView([35.36, 138.73], 5);
 
         setDocuments();
         setEvent();
     }
 
-    function addOverLay() {
+    addOverLay = function() {
         customLays[0] = L.geoJson(null, {
 	        style: function(feature) {
 	            return { color: color[0] };
@@ -115,9 +128,10 @@ MAPTOOL.module = (function() {
             'SR600_紀伊山地の世界遺産(2)':rideLays[1],
             'SR600_紀伊山地の世界遺産(3)':rideLays[2]
         }
+        myMap.setView([34.077721, 135.651822], 5);
     }
 
-    function geojson_style(prop) {
+    geojson_style = function(prop) {
         var s = {};
         for(name in prop) {
             if(name.match(/^_/) && !name.match(/_markerType/)){
@@ -128,7 +142,7 @@ MAPTOOL.module = (function() {
         return s;
     }
 
-    function popup_properties(prop) {
+    popup_properties = function(prop) {
         var s = '';
         for(name in prop) {
             if(!name.match(/^_/)){
@@ -141,7 +155,7 @@ MAPTOOL.module = (function() {
     // スタイルつき GeoJSON読み込み
     // 「./sample1.geojson」の部分を適宜変更してください。
     // (国土地理院サンプルを微改修)
-    function getGeoLayer(jsonFile) {
+    getGeoLayer = function(jsonFile) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', jsonFile, false);
         xhr.send(null);
@@ -178,21 +192,21 @@ MAPTOOL.module = (function() {
         return sampleLayer;
     }
 
-    function getPcLayer() {
+    getPcLayer = function() {
         var pcJsonPath = './data/pcPoint.json';
 
         pcLay = getGeoLayer(pcJsonPath);
         pcLay.addTo(myMap);
     }
 
-    function delPcLayer() {
+    delPcLayer = function() {
         if (pcLay !== null) {
             pcLay.remove();
             pcLay = null;
         }
     }
 
-    function changeDisp(obj) {
+    changeDisp = function(obj) {
         var dispState = obj.style.display;
 
         if (dispState === 'none') {
@@ -202,7 +216,7 @@ MAPTOOL.module = (function() {
         }
     }   
 
-    function changeMenu() {
+    changeMenu = function() {
         changeDisp(mDoc);
         var dispState = mDoc.style.display;
         if (dispState === 'none') {
@@ -212,7 +226,7 @@ MAPTOOL.module = (function() {
         }
     }
 
-    function changePcPoint() {
+    changePcPoint = function() {
         if (pcLay === null) {
             getPcLayer();
             m1Doc.style.backgroundColor = 'lightsteelblue';
@@ -220,18 +234,6 @@ MAPTOOL.module = (function() {
             delPcLayer();
             m1Doc.style.backgroundColor = 'white';
         }
-    }
-
-    function setDocuments() {
-        doc = document;
-        miDoc = document.getElementById('menu_icon'),
-        mDoc = document.getElementById('menu');
-        m1Doc = document.getElementById('m1');
-    }
-
-    function setEvent() {
-        miDoc.addEventListener("click", changeMenu);
-        m1Doc.addEventListener("click", changePcPoint);
     }
 
     window.addEventListener("load", init);
