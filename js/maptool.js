@@ -34,8 +34,7 @@ MAPTOOL.module = (function() {
         delPcLayer,
         changeDisp,
         changeMenu,
-        changePcPoint,
-        setEvent;
+        changePcPoint;
 
     init = function() {
         myMap = L.map('map');
@@ -74,7 +73,6 @@ MAPTOOL.module = (function() {
             ).addTo(myMap);
         paleMap.addTo(myMap);
 
-        setEvent();
     }
 
     addOverLay = function() {
