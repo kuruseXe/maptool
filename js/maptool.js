@@ -35,7 +35,6 @@ MAPTOOL.module = (function() {
         changeDisp,
         changeMenu,
         changePcPoint,
-        setDocuments,
         setEvent;
 
     init = function() {
@@ -75,7 +74,6 @@ MAPTOOL.module = (function() {
             ).addTo(myMap);
         paleMap.addTo(myMap);
 
-        setDocuments();
         setEvent();
     }
 
