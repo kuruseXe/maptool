@@ -34,7 +34,9 @@ MAPTOOL.module = (function() {
         delPcLayer,
         changeDisp,
         changeMenu,
-        changePcPoint;
+        changePcPoint,
+        setDocuments,
+        setEvent;
 
     init = function() {
         myMap = L.map('map');
@@ -72,6 +74,8 @@ MAPTOOL.module = (function() {
                 {collapsed: false}
             ).addTo(myMap);
         paleMap.addTo(myMap);
+        setDocuments();
+        setEvent();
 
     }
 
@@ -231,6 +235,19 @@ MAPTOOL.module = (function() {
             m1Doc.style.backgroundColor = 'white';
         }
     }
+
+    setDocuments = function() {
+        doc = document;
+        miDoc = document.getElementById('menu_icon'),
+        mDoc = document.getElementById('menu');
+        m1Doc = document.getElementById('m1');
+    }
+
+    setEvent = function() {
+        miDoc.addEventListener("click", changeMenu);
+        m1Doc.addEventListener("click", changePcPoint);
+    }
+
 
     window.addEventListener("load", init);
 })();
