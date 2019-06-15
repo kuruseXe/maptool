@@ -19,11 +19,31 @@ MAPTOOL.module = (function() {
         rideLays = [],
         customLays = [],
         pcLay = null,
+        bsize,
+        imgList = {
+            menu    : {
+                on  : './images/menu_on.png',
+                off : './images/menu_off.png'
+            },
+            pc      : {
+                on  : './images/pc_on.png',
+                off : './images/pc_off.png'
+            },
+            gps     : {
+                on  : './images/gps_on.png',
+                off : './images/gps_off.png'
+            }
+        },
         // documents
         doc,
         miDoc,
-        mDoc,
+        miimgDoc,
+        mcDoc,
+        mcDocLen,
         m1Doc,
+        m1imgDoc,
+        m2Doc,
+        m2imgDoc,
         // functions
         init,
         addOverLay,
@@ -35,6 +55,7 @@ MAPTOOL.module = (function() {
         changeDisp,
         changeMenu,
         changePcPoint,
+        resizeBottom,
         setDocuments,
         setEvent;
 
@@ -77,6 +98,7 @@ MAPTOOL.module = (function() {
         setDocuments();
         setEvent();
 
+        resizeBottom();
     }
 
     addOverLay = function() {
@@ -128,7 +150,6 @@ MAPTOOL.module = (function() {
             'SR600_紀伊山地の世界遺産(2)':rideLays[1],
             'SR600_紀伊山地の世界遺産(3)':rideLays[2]
         }
-        myMap.setView([34.077721, 135.651822], 5);
     }
 
     geojson_style = function(prop) {
@@ -210,44 +231,72 @@ MAPTOOL.module = (function() {
         var dispState = obj.style.display;
 
         if (dispState === 'none') {
-            obj.style.display = 'block';
+            obj.style.display = 'inline';
         } else {
             obj.style.display = 'none';
         }
     }   
 
     changeMenu = function() {
-        changeDisp(mDoc);
-        var dispState = mDoc.style.display;
+        changeDisp(m1Doc);
+        changeDisp(m2Doc);
+        var dispState = m1Doc.style.display;
         if (dispState === 'none') {
-            miDoc.style.backgroundColor = 'white';
+            miDoc.style.borderColor = '#3aabd2';
+            miimgDoc.src = imgList.menu.off;
         } else {
-            miDoc.style.backgroundColor = 'lightsteelblue';
+            miDoc.style.borderColor = '#df5656';
+            miimgDoc.src = imgList.menu.on;
         }
     }
 
     changePcPoint = function() {
         if (pcLay === null) {
             getPcLayer();
-            m1Doc.style.backgroundColor = 'lightsteelblue';
+            m1Doc.style.borderColor = '#df5656';
+            m1imgDoc.src = imgList.pc.on;
         } else {
             delPcLayer();
-            m1Doc.style.backgroundColor = 'white';
+            m1Doc.style.borderColor = '#3aabd2';
+            m1imgDoc.src = imgList.pc.off;
         }
+    }
+
+    resizeBottom = function() {
+        var dispWidth = window.innerWidth,
+            dispHeight = window.innerHeight;
+
+        if (dispWidth <= dispHeight) {
+            bsize = dispWidth / 10;
+        } else {
+            bsize = dispHeight / 10;
+        }
+
+        for (var i=0; i<mcDocLen; i++) {
+            mcDoc[i].style.width = bsize + 'px';
+            mcDoc[i].style.height = bsize + 'px';
+        }
+
+        m1Doc.style.bottom = (bsize * 2 + 10 * 2 + 10) + 'px';
+        m2Doc.style.bottom = (bsize * 1 + 10 * 1 + 10) + 'px';
     }
 
     setDocuments = function() {
         doc = document;
-        miDoc = document.getElementById('menu_icon'),
-        mDoc = document.getElementById('menu');
+        miDoc = document.getElementById('menu_icon');
+        miimgDoc = document.getElementById('menu_img');
+        mcDoc = document.getElementsByClassName('melem_size');
+        mcDocLen = mcDoc.length;
         m1Doc = document.getElementById('m1');
+        m1imgDoc = document.getElementById('m1_img');
+        m2Doc = document.getElementById('m2');
+        m2imgDoc = document.getElementById('m2_img');
     }
 
     setEvent = function() {
         miDoc.addEventListener("click", changeMenu);
         m1Doc.addEventListener("click", changePcPoint);
     }
-
 
     window.addEventListener("load", init);
 })();
